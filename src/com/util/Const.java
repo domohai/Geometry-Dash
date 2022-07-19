@@ -1,6 +1,6 @@
 package com.util;
 
-import java.awt.Color;
+import java.awt.*;
 
 public class Const {
 	public static final int SCREEN_WIDTH = 1280;
@@ -31,5 +31,12 @@ public class Const {
 	
 	public static final Color GB_COLOR = new Color(15.0f/255.0f, 98.0f/255.0f, 212.0f/255.0f, 1.0f);
 	public static final Color GROUND_COLOR = new Color(28.0f/255.0f, 70.0f/255.0f, 148.0f/255.0f, 1.0f);
+	
+	public static final int CONTAINER_OFFSET_Y = 535;
+	public static final int TAB_WIDTH = 75;
+	public static final int TAB_HEIGHT = 38;
+	public static final int TAB_OFFSET_X = 380;
+	public static final int TAB_OFFSET_Y = 497;
+	public static final int TAB_HORIZONTAL_SPACING = 10;
 	
 }
