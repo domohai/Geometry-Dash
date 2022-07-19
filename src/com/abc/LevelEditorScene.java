@@ -66,7 +66,7 @@ public class LevelEditorScene extends Scene {
 		AssetPool.addSpritesheet("assets/buttonSprites.png", 60, 60, 2, 2, 2);
 		AssetPool.addSpritesheet("assets/ui/tabs.png", Const.TAB_WIDTH, Const.TAB_HEIGHT, 2, 6, 6);
 		AssetPool.addSpritesheet("assets/spikes.png", Const.TILE_WIDTH, Const.TILE_HEIGHT, 2, 6, 4);
-		AssetPool.addSpritesheet("assets/bigSprites.png", Const.TILE_WIDTH*2, Const.TILE_HEIGHT*2, 2, 2, 4);
+		AssetPool.addSpritesheet("assets/bigSprites.png", 84, 84, 2, 2, 2);
 		AssetPool.addSpritesheet("assets/smallBlocks.png", Const.TILE_WIDTH, Const.TILE_HEIGHT, 2, 6, 1);
 		AssetPool.addSpritesheet("assets/portal.png", 44, 85, 2, 2, 2);
 		
