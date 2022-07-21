@@ -2,6 +2,7 @@ package com.UI;
 import com.Component.BoxBounds;
 import com.Component.Sprite;
 import com.Component.Spritesheet;
+import com.Component.TriangleBounds;
 import com.abc.Component;
 import com.abc.GameObject;
 import com.abc.Window;
@@ -20,7 +21,8 @@ public class MainContainer extends Component {
 	public List<GameObject> menuItems;
 	public List<GameObject> tabs;
 	public Map<GameObject, List<GameObject>> tabMaps;
-	public GameObject currentTab;
+	private GameObject hotTab = null;
+	private GameObject hotButton = null;
 	
 	public MainContainer() {
 		this.menuItems = new ArrayList<>();
@@ -38,14 +40,17 @@ public class MainContainer extends Component {
 			int y = Const.TAB_OFFSET_Y;
 			GameObject tabobj = new GameObject("Tab", new Transform(new Vector2D(x, y)), 10);
 			tabobj.setUi(true);
-			tabobj.addComponent(currentTab);
+			tabobj.setNonserializable();
+			TabItem tabItem = new TabItem(x, y, Const.TAB_WIDTH, Const.TAB_HEIGHT, currentTab, this);
+			
+			tabobj.addComponent(tabItem);
 			this.tabs.add(tabobj);
 			this.tabMaps.put(tabobj, new ArrayList<>());
 			
 			Window.getWindow().getCurrent_scene().addGameObject(tabobj);
 		}
-		this.currentTab = this.tabs.get(3);
-		
+		this.hotTab = this.tabs.get(0);
+		this.hotTab.getComponent(TabItem.class).isSelected = true;
 		addTabObjects();
 		
 	}
@@ -70,7 +75,7 @@ public class MainContainer extends Component {
 			obj.setNonserializable();
 			obj.addComponent(currentSprite.copy());
 			MenuItem menuItem = new MenuItem(x, y, Const.BUTTON_WIDTH, Const.BUTTON_HEIGHT,
-					buttonSprites.sprites.get(0), buttonSprites.sprites.get(1));
+					buttonSprites.sprites.get(0), buttonSprites.sprites.get(1), this);
 			obj.addComponent(menuItem);
 			obj.addComponent(new BoxBounds(Const.TILE_WIDTH, Const.TILE_HEIGHT));
 			this.tabMaps.get(this.tabs.get(0)).add(obj);
@@ -98,6 +103,7 @@ public class MainContainer extends Component {
 				obj.addComponent(spikeSprites.sprites.get(i));
 				obj.addComponent(menuItem);
 				// TODO:: add triangle bounds here
+				obj.addComponent(new TriangleBounds(42, 42));
 				
 				this.tabMaps.get(tabs.get(3)).add(obj);
 				
@@ -144,8 +150,19 @@ public class MainContainer extends Component {
 	
 	@Override
 	public void update(double dt) {
-		for (GameObject g : this.tabMaps.get(currentTab)) {
+		for (GameObject g : this.tabMaps.get(hotTab)) {
 			g.update(dt);
+			MenuItem menuItem = g.getComponent(MenuItem.class);
+			if (g != hotButton && menuItem.isSelected) {
+				menuItem.isSelected = false;
+			}
+		}
+		
+		for (GameObject g : this.tabs) {
+			TabItem tabItem = g.getComponent(TabItem.class);
+			if (g != hotTab && tabItem.isSelected) {
+				tabItem.isSelected = false;
+			}
 		}
 	}
 	
@@ -153,7 +170,7 @@ public class MainContainer extends Component {
 	public void draw(Graphics2D g2D) {
 		g2D.drawImage(this.containerBg.image, 0, Const.CONTAINER_OFFSET_Y, this.containerBg.width, this.containerBg.height, null);
 		
-		for (GameObject g : this.tabMaps.get(currentTab)) {
+		for (GameObject g : this.tabMaps.get(hotTab)) {
 			g.draw(g2D);
 		}
 	}
@@ -166,5 +183,12 @@ public class MainContainer extends Component {
 	@Override
 	public String serialize(int tabSize) {
 		return "";
+	}
+	
+	public void setHotButton(GameObject obj) {
+		this.hotButton = obj;
+	}
+	public void setHotTab(GameObject obj) {
+		this.hotTab = obj;
 	}
 }

@@ -10,7 +10,7 @@ public class Transform extends Serialize {
 	
 	public Transform(Vector2D position) {
 		this.position = position;
-		this.scale = new Vector2D(1.2, 1.2);
+		this.scale = new Vector2D(1.0, 1.0);
 		this.rotation = 0.0;
 	}
 	

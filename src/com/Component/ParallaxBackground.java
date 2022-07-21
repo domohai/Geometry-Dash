@@ -30,6 +30,7 @@ public class ParallaxBackground extends Component {
 	
 	@Override
 	public void update(double dt) {
+		if (backgrounds == null) return;
 		this.timeStep++;
 		this.gameObject.transform.position.x -= speed * dt;
 		this.gameObject.transform.position.x = (float)Math.floor(this.gameObject.transform.position.x);

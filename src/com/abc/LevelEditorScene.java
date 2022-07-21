@@ -1,5 +1,4 @@
 package com.abc;
-
 import com.Component.*;
 import com.Files.Parser;
 import com.UI.MainContainer;
@@ -7,7 +6,8 @@ import com.dataStructure.AssetPool;
 import com.dataStructure.Transform;
 import com.util.Const;
 import com.util.Vector2D;
-import java.awt.*;
+import java.awt.Graphics2D;
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -38,7 +38,6 @@ public class LevelEditorScene extends Scene {
 		mouseCursor = new GameObject("mouse", new Transform(new Vector2D(0.0, 0.0)), 10);
 		mouseCursor.addComponent(new SnapToGrid(Const.TILE_WIDTH, Const.TILE_HEIGHT));
 		
-		
 		player = new GameObject("game object", new Transform(new Vector2D(300.0, 300.0)), 0);
 		Spritesheet spritesheet1 = AssetPool.getSpritesheet("assets/layerOne.png");
 		Spritesheet spritesheet2 = AssetPool.getSpritesheet("assets/layerTwo.png");
@@ -47,15 +46,45 @@ public class LevelEditorScene extends Scene {
 				spritesheet3.sprites.get(0), Color.WHITE, Color.GREEN);
 		player.addComponent(playerCom);
 		
-		ground = new GameObject("ground", new Transform(new Vector2D(0, Const.GROUND_Y)), 1);
-		ground.addComponent(new Ground());
-		ground.setNonserializable();
 		player.setNonserializable();
 		
 		addGameObject(player);
+		initBackgrounds();
+		
+	}
+	
+	public void initBackgrounds() {
+		ground = new GameObject("ground", new Transform(new Vector2D(0, Const.GROUND_Y)),1);
+		ground.addComponent(new Ground());
+		ground.setNonserializable();
 		addGameObject(ground);
-		
-		
+		int numBackground = 5;
+		GameObject[] backgrounds = new GameObject[numBackground];
+		GameObject[] groundBgs = new GameObject[numBackground];
+		for (int i = 0; i < numBackground; i++) {
+			ParallaxBackground bg = new ParallaxBackground("assets/backgrounds/bg01.png",
+					null, ground.getComponent(Ground.class), false);
+			int x = i * bg.sprite.width;
+			int y = 0;
+			GameObject g = new GameObject("background", new Transform(new Vector2D(x, y)), -10);
+			g.setUi(true);
+			g.setNonserializable();
+			g.addComponent(bg);
+			backgrounds[i] = g;
+			
+			ParallaxBackground groundBg = new ParallaxBackground("assets/grounds/ground01.png",
+					null, ground.getComponent(Ground.class), true);
+			x = i * groundBg.sprite.width;
+			y = (int) ground.transform.position.y;
+			GameObject groundGo = new GameObject("groundBg", new Transform(new Vector2D(x, y)), -9);
+			groundGo.addComponent(groundBg);
+			groundGo.setUi(true);
+			groundGo.setNonserializable();
+			groundBgs[i] = groundGo;
+			addGameObject(g);
+			addGameObject(groundGo);
+			
+		}
 	}
 	
 	public void initAssetsPool() {
@@ -144,7 +173,7 @@ public class LevelEditorScene extends Scene {
 	
 	@Override
 	public void draw(Graphics2D g2D) {
-		g2D.setColor(Color.BLACK);
+		g2D.setColor(Const.GB_COLOR);
 		g2D.fillRect(0, 0, Const.SCREEN_WIDTH, Const.SCREEN_HEIGHT);
 		renderer.render(g2D);
 		grid.draw(g2D);

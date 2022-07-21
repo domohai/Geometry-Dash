@@ -60,7 +60,7 @@ public class PlayerComponent extends Component {
 			this.onGround = false;
 		}
 		if (!onGround) {
-			gameObject.transform.rotation += 7.0 * dt;
+			gameObject.transform.rotation += 6.5 * dt;
 		} else {
 			//gameObject.transform.rotation = (int)gameObject.transform.rotation % 360;
 			gameObject.transform.rotation = (Math.round(gameObject.transform.rotation / 90)) * 90;
@@ -81,7 +81,7 @@ public class PlayerComponent extends Component {
 	public void draw(Graphics2D g2D) {
 		AffineTransform transform = new AffineTransform();
 		transform.setToIdentity();
-		transform.translate(gameObject.transform.position.x, gameObject.transform.position.y-6.5);
+		transform.translate(gameObject.transform.position.x, gameObject.transform.position.y);
 		transform.rotate(gameObject.transform.rotation, width*gameObject.transform.scale.x/2.0,
 				height*gameObject.transform.scale.y/2.0);
 		transform.scale(gameObject.transform.scale.x, gameObject.transform.scale.y);

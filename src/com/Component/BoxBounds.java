@@ -8,6 +8,7 @@ public class BoxBounds extends Bounds {
 	public double width, height;
 	public double halfW, halfH;
 	public Vector2D center = new Vector2D(0.0, 0.0);
+	public float enclosingR;
 	
 	public BoxBounds(double width, double height) {
 		this.width = width;
@@ -15,6 +16,7 @@ public class BoxBounds extends Bounds {
 		this.halfW = this.width / 2.0;
 		this.halfH = this.height / 2.0;
 		this.type = BoundsType.BOX;
+		this.enclosingR = (float) Math.sqrt((this.halfW * this.halfW) + (this.halfH * this.halfH));
 	}
 	
 	@Override
@@ -55,7 +57,7 @@ public class BoxBounds extends Bounds {
 		double overlapY = combineHalfH - Math.abs(dy);
 		
 		if (overlapX >= overlapY) {
-			if (dy >= 0.4) { // 0.0
+			if (dy >= 0.0) { // 0.0
 				// collide on top of player
 				player.getComponent(PlayerComponent.class).onGround = true;
 				player.transform.position.y = gameObject.transform.position.y - playerBounds.getHeight();
@@ -66,7 +68,7 @@ public class BoxBounds extends Bounds {
 			}
 		} else {
 			// collide on the right or left of the player
-			if (dx <= 35.0 && dy <= 35.0) { //&& dy <= 1.0
+			if (dx <= 30.0 && dy <= 30.0) { //&& dy <= 1.0
 				player.getComponent(RigidBody.class).velocity.y = 0.0;
 				player.getComponent(PlayerComponent.class).onGround = true;
 				

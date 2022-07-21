@@ -71,7 +71,6 @@ public class LevelScene extends Scene {
 			addGameObject(groundGo);
 			
 		}
-		
 	}
 	
 	public void initAssetsPool() {
@@ -111,7 +110,6 @@ public class LevelScene extends Scene {
 	
 	@Override
 	public void draw(Graphics2D g2D) {
-		//g2D.setColor(Color.BLACK);
 		g2D.setColor(Const.GB_COLOR);
 		g2D.fillRect(0, 0, Const.SCREEN_WIDTH, Const.SCREEN_HEIGHT);
 		renderer.render(g2D);
