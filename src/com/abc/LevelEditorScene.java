@@ -22,6 +22,7 @@ public class LevelEditorScene extends Scene {
 	public GameObject mouseCursor;
 	private MainContainer editingButtons;
 	
+	
 	public LevelEditorScene(String name) {
 		super(name);
 	}
@@ -36,7 +37,7 @@ public class LevelEditorScene extends Scene {
 		editingButtons.start();
 		
 		mouseCursor = new GameObject("mouse", new Transform(new Vector2D(0.0, 0.0)), 10);
-		mouseCursor.addComponent(new SnapToGrid(Const.TILE_WIDTH, Const.TILE_HEIGHT));
+		mouseCursor.addComponent(new LevelEditorController(Const.TILE_WIDTH, Const.TILE_HEIGHT));
 		
 		player = new GameObject("game object", new Transform(new Vector2D(300.0, 300.0)), 0);
 		Spritesheet spritesheet1 = AssetPool.getSpritesheet("assets/layerOne.png");
@@ -103,15 +104,6 @@ public class LevelEditorScene extends Scene {
 	
 	@Override
 	public void update(double deltatime) {
-		/*
-		if (player.transform.position.x - camera.position.x > Const.CAMERA_OFFSET_X) {
-			camera.position.x = player.transform.position.x - Const.CAMERA_OFFSET_X;
-		}
-		if (player.transform.position.y - camera.position.y > Const.CAMERA_OFFSET_Y) {
-			camera.position.y = player.transform.position.y - Const.CAMERA_OFFSET_Y;
-		}
-		 */
-		
 		if (camera.position.y > Const.CAMERA_OFFSET_GROUND_Y) {
 			camera.position.y = Const.CAMERA_OFFSET_GROUND_Y+70;
 		}

@@ -32,7 +32,6 @@ public class Window extends JFrame implements Runnable {
         this.addMouseListener(mouse_listener);
         this.addMouseMotionListener(mouse_listener);
         this.addKeyListener(key_listener);
-        
     }
 
     public void init() {
@@ -45,6 +44,18 @@ public class Window extends JFrame implements Runnable {
             Window.window = new Window();
         }
         return Window.window;
+    }
+    
+    public static Scene getScene() {
+        return getWindow().getCurrent_scene();
+    }
+    
+    public static MouseController mouseListener() {
+        return getWindow().mouse_listener;
+    }
+    
+    public static KeyController keyListener() {
+        return getWindow().key_listener;
     }
     
     public Scene getCurrent_scene() {

@@ -1,8 +1,13 @@
 package com.Component;
+
 import com.Files.Parser;
 import com.abc.Component;
 import com.abc.GameObject;
+import com.util.Const;
 import com.util.Vector2D;
+import java.awt.Graphics2D;
+import java.awt.Color;
+import java.awt.geom.Rectangle2D;
 
 public class BoxBounds extends Bounds {
 	public double width, height;
@@ -78,9 +83,17 @@ public class BoxBounds extends Bounds {
 		}
 	}
 	
-	@Override
-	public void update(double dt) {
 	
+	
+	@Override
+	public void draw(Graphics2D g2D) {
+		
+		g2D.setStroke(Const.THICK_LINE);
+		g2D.setColor(Color.GREEN);
+		g2D.draw(new Rectangle2D.Float((float)(this.gameObject.transform.position.x),
+				(float)(this.gameObject.transform.position.y),
+				(float)this.width, (float)this.height));
+		g2D.setStroke(Const.LINE);
 	}
 	
 	@Override
@@ -117,5 +130,13 @@ public class BoxBounds extends Bounds {
 	@Override
 	public double getHeight() {
 		return this.height;
+	}
+	
+	@Override
+	public boolean raycast(Vector2D pos) {
+		return pos.x > this.gameObject.transform.position.x &&
+				pos.x < this.gameObject.transform.position.x + this.width &&
+				pos.y > this.gameObject.transform.position.y &&
+				pos.y < this.gameObject.transform.position.y + this.height;
 	}
 }

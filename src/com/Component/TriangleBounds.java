@@ -9,6 +9,11 @@ public class TriangleBounds extends Bounds {
 	private float base, height, halfW, halfH;
 	private float enclosingR;
 	private float x1, x2, x3, y1, y2, y3;
+	private final int inside = 0; // 0000
+	private final int LEFT = 1; // 0001
+	private final int RIGHT = 2; // 0010
+	private final int BOTTOM = 4; // 0100
+	private final int TOP = 8; // 1000
 	
 	public TriangleBounds(float base, float height) {
 		this.type = BoundsType.TRIANGLE;
@@ -27,7 +32,7 @@ public class TriangleBounds extends Bounds {
 	
 	public static boolean check_collision(BoxBounds b1, TriangleBounds t2) {
 		if (t2.broadPhase(b1)) {
-			System.out.println("abcabc");
+			//System.out.println("abcabc");
 			return t2.narrowPhase(b1);
 		}
 		return false;
@@ -61,7 +66,9 @@ public class TriangleBounds extends Bounds {
 		p3 = rotatePoint(rAngle, p3, origin);
 		
 		
-		return true;
+		return boxIntersectLine(p1, p2, 0, b1, b1.gameObject.transform.position) ||
+				boxIntersectLine(p2, p3, 0, b1, b1.gameObject.transform.position) ||
+				boxIntersectLine(p1, p3, 0, b1, b1.gameObject.transform.position);
 	}
 	
 	private boolean boxIntersectLine(Vector2D p1, Vector2D p2, int depth, BoxBounds bounds, Vector2D pos) {
@@ -69,7 +76,58 @@ public class TriangleBounds extends Bounds {
 			System.out.println("Max depth exceeded");
 			return true;
 		}
+		int code1 = computeRegionCode(p1, bounds);
+		int code2 = computeRegionCode(p2, bounds);
+		// check if the line is completely inside or outside
+		// or half in and half out
+		if (code1 == 0 && code2 == 0) {
+			// completely inside
+			return true;
+		} else if ((code1 & code2) != 0) {
+			// outside
+			return false;
+		} else if (code1 == 0 || code2 == 0) {
+			// one point inside, one point outside
+			return true;
+		}
+		int xMax = (int)(pos.x + bounds.width);
+		int xMin = (int)(pos.x);
+		// calculate slope
+		float m = (float) ((p2.y - p1.y) / (p2.x - p1.x));
+		float b = (float) (p2.y - (m * p2.x));
+		if ((code1 & LEFT) == LEFT) {
+			p1.x = xMin + 1;
+		} else if ((code1 & RIGHT) == RIGHT) {
+			p1.x = xMax - 1;
+		}
+		p1.y = (m * p1.x) + b;
+		//
+		if ((code2 & LEFT) == LEFT) {
+			p2.x = xMin + 1;
+		} else if ((code2 & RIGHT) == RIGHT) {
+			p2.x = xMax - 1;
+		}
+		p2.y = (m * p2.x) + b;
+		return boxIntersectLine(p1,p2, depth++, bounds, pos);
+	}
+	
+	private int computeRegionCode(Vector2D p, BoxBounds b) {
+		int code = inside;
+		Vector2D topLeft = b.gameObject.transform.position;
 		
+		// check if the point is on the left or right of bounds
+		if (p.x < topLeft.x) {
+			code |= LEFT;
+		} else if (p.x > topLeft.x + b.width) {
+			code |= RIGHT;
+		}
+		// check if the point is above or below the box
+		if (p.y < topLeft.y) {
+			code |= TOP;
+		} else if (p.y > topLeft.y + b.height) {
+			code |= BOTTOM;
+		}
+		return code;
 	}
 	
 	private void calculateTransform() {
@@ -116,6 +174,11 @@ public class TriangleBounds extends Bounds {
 	@Override
 	public double getHeight() {
 		return this.height;
+	}
+	
+	@Override
+	public boolean raycast(Vector2D pos) {
+		return false;
 	}
 	
 	@Override

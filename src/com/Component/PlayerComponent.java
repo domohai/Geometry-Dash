@@ -48,8 +48,10 @@ public class PlayerComponent extends Component {
 	}
 	
 	public void die() {
-		gameObject.transform.position.x = 0.0;
-		gameObject.transform.position.y = 30.0;
+		gameObject.transform.position.x = 500.0;
+		gameObject.transform.position.y = 350.0;
+		gameObject.getComponent(RigidBody.class).velocity.y = 0;
+		gameObject.transform.rotation = 0.0;
 		Window.getWindow().getCurrent_scene().camera.position.x = 0.0;
 	}
 	

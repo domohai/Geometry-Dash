@@ -19,6 +19,8 @@ public class Parser {
 	public static void openFile(String filename) {
 		File file = new File("Data/" + filename + ".zip");
 		if (!file.exists()) return;
+		//offset = 0;
+		//line = 1;
 		try {
 			ZipFile zipFile = new ZipFile("Data/" + filename + ".zip");
 			ZipEntry jsonfile = new ZipEntry(zipFile.getEntry(filename + ".json"));

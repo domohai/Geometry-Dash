@@ -31,10 +31,9 @@ public class LevelScene extends Scene {
 		
 		player.addComponent(new RigidBody(new Vector2D(Const.PLAYER_SPEED, 0)));
 		
-		playerBounds = new BoxBounds(Const.TILE_WIDTH, Const.TILE_HEIGHT);
+		playerBounds = new BoxBounds(Const.TILE_WIDTH-2, Const.TILE_HEIGHT-2);
 		player.addComponent(playerBounds);
 		
-		//addGameObject(player);
 		renderer.submit(player);
 		initBackgrounds();
 		
