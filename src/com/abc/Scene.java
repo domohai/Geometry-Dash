@@ -5,24 +5,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Scene {
-	String name;
+	protected String name;
 	public Camera camera;
-	List<GameObject> gameObjects;
-	Renderer renderer;
+	protected List<GameObject> gameObjects;
+	public List<GameObject> toRemoveObjects;
+	protected Renderer renderer;
 	
 	public Scene(String name) {
 		this.name = name;
 		this.gameObjects = new ArrayList<>();
+		this.toRemoveObjects = new ArrayList<>();
 		this.camera = new Camera(new Vector2D(0.0, 0.0));
 		this.renderer = new Renderer(this.camera);
-		
 	}
 	
 	public void init() {
 	
 	}
+	
 	public List<GameObject> getAllGameObject() {
 		return gameObjects;
+	}
+	
+	public void removeObject(GameObject object) {
+		this.toRemoveObjects.add(object);
 	}
 	
 	public void addGameObject(GameObject g) {

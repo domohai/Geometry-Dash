@@ -1,9 +1,12 @@
 package com.Component;
 import com.Files.Parser;
 import com.abc.Component;
+import com.abc.Window;
 import com.util.Const;
 import com.util.Vector2D;
+import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.geom.Line2D;
 
 public class TriangleBounds extends Bounds {
 	private float base, height, halfW, halfH;
@@ -108,7 +111,7 @@ public class TriangleBounds extends Bounds {
 			p2.x = xMax - 1;
 		}
 		p2.y = (m * p2.x) + b;
-		return boxIntersectLine(p1,p2, depth++, bounds, pos);
+		return boxIntersectLine(p1,p2, depth+1, bounds, pos);
 	}
 	
 	private int computeRegionCode(Vector2D p, BoxBounds b) {
@@ -130,7 +133,7 @@ public class TriangleBounds extends Bounds {
 		return code;
 	}
 	
-	private void calculateTransform() {
+	public void calculateTransform() {
 		double angle = Math.toRadians(gameObject.transform.rotation);
 		Vector2D p1 = new Vector2D(gameObject.transform.position.x, gameObject.transform.position.y + height);
 		Vector2D p2 = new Vector2D(gameObject.transform.position.x + halfW, gameObject.transform.position.y);
@@ -163,7 +166,24 @@ public class TriangleBounds extends Bounds {
 	
 	@Override
 	public void draw(Graphics2D g2D) {
-	
+		if (isSelected) {
+			g2D.setColor(Color.GREEN);
+			g2D.setStroke(Const.THICK_LINE);
+			g2D.draw(new Line2D.Float((float)(this.x1 - Window.getScene().camera.position.x)
+					, (float)(this.y1 - Window.getScene().camera.position.y)
+					, (float)(this.x2 - Window.getScene().camera.position.x)
+					, (float)(this.y2 - Window.getScene().camera.position.y)));
+			g2D.draw(new Line2D.Double(this.x1 - Window.getScene().camera.position.x
+					, this.y1 - Window.getScene().camera.position.y
+					, this.x3 - Window.getScene().camera.position.x
+					, this.y3 - Window.getScene().camera.position.y));
+			g2D.draw(new Line2D.Double(this.x3 - Window.getScene().camera.position.x
+					, this.y3 - Window.getScene().camera.position.y
+					, this.x2 - Window.getScene().camera.position.x
+					, this.y2 - Window.getScene().camera.position.y));
+			
+			g2D.setStroke(Const.LINE);
+		}
 	}
 	
 	@Override
@@ -176,9 +196,31 @@ public class TriangleBounds extends Bounds {
 		return this.height;
 	}
 	
+	public float dot(Vector2D v1, Vector2D v2) {
+		return (float) (v1.x * v2.x + v1.y * v2.y);
+	}
+	
 	@Override
 	public boolean raycast(Vector2D pos) {
-		return false;
+		// Compute vectors
+		Vector2D v0 = new Vector2D(x3 - x1, y3 - y1);
+		Vector2D v1 = new Vector2D(x2 - x1, y2 - y1);
+		Vector2D v2 = new Vector2D(pos.x - x1, pos.y - y1);
+		
+		// Compute dot products
+		float dot00 = dot(v0, v0);
+		float dot01 = dot(v0, v1);
+		float dot02 = dot(v0, v2);
+		float dot11 = dot(v1, v1);
+		float dot12 = dot(v1, v2);
+		
+		// Compute barycentric coordinates
+		float invDenom = 1.0f / (dot00 * dot11 - dot01 * dot01);
+		float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
+		float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+		
+		// Check if point is in triangle
+		return ((u >= 0.0f) && (v >= 0.0f) && (u + v < 1.0f));
 	}
 	
 	@Override

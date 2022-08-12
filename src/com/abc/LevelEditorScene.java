@@ -1,4 +1,5 @@
 package com.abc;
+
 import com.Component.*;
 import com.Files.Parser;
 import com.UI.MainContainer;
@@ -6,8 +7,8 @@ import com.dataStructure.AssetPool;
 import com.dataStructure.Transform;
 import com.util.Const;
 import com.util.Vector2D;
-import java.awt.Graphics2D;
-import java.awt.Color;
+
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -107,11 +108,9 @@ public class LevelEditorScene extends Scene {
 		if (camera.position.y > Const.CAMERA_OFFSET_GROUND_Y) {
 			camera.position.y = Const.CAMERA_OFFSET_GROUND_Y+70;
 		}
-		
 		for (GameObject g : gameObjects) {
 			g.update(deltatime);
 		}
-		
 		cameraController.update(deltatime);
 		grid.update(deltatime);
 		editingButtons.update(deltatime);
@@ -126,6 +125,13 @@ public class LevelEditorScene extends Scene {
 		} else if (Window.getWindow().key_listener.key_is_pressed(KeyEvent.VK_P)) {
 			// press P to switch to Level scene
 			Window.getWindow().change_scene(GameState.LEVEL_SCENE);
+		}
+		if (this.toRemoveObjects.size() > 0) {
+			for (GameObject g : this.toRemoveObjects) {
+				this.gameObjects.remove(g);
+				this.renderer.gameObjects.get(g.zIndex).remove(g);
+			}
+			this.toRemoveObjects.clear();
 		}
 	}
 	
@@ -167,12 +173,12 @@ public class LevelEditorScene extends Scene {
 	public void draw(Graphics2D g2D) {
 		g2D.setColor(Const.GB_COLOR);
 		g2D.fillRect(0, 0, Const.SCREEN_WIDTH, Const.SCREEN_HEIGHT);
-		renderer.render(g2D);
-		grid.draw(g2D);
-		editingButtons.draw(g2D);
+		this.renderer.render(g2D);
+		this.grid.draw(g2D);
+		this.editingButtons.draw(g2D);
 		
 		// should be draw last
-		mouseCursor.draw(g2D);
+		this.mouseCursor.draw(g2D);
 	}
 	
 	

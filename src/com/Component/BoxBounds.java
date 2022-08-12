@@ -27,7 +27,6 @@ public class BoxBounds extends Bounds {
 	@Override
 	public void start() {
 		this.calculateCenter();
-		
 	}
 	
 	public void calculateCenter() {
@@ -83,17 +82,16 @@ public class BoxBounds extends Bounds {
 		}
 	}
 	
-	
-	
 	@Override
 	public void draw(Graphics2D g2D) {
-		
-		g2D.setStroke(Const.THICK_LINE);
-		g2D.setColor(Color.GREEN);
-		g2D.draw(new Rectangle2D.Float((float)(this.gameObject.transform.position.x),
-				(float)(this.gameObject.transform.position.y),
-				(float)this.width, (float)this.height));
-		g2D.setStroke(Const.LINE);
+		if (isSelected) {
+			g2D.setStroke(Const.THICK_LINE);
+			g2D.setColor(Color.GREEN);
+			g2D.draw(new Rectangle2D.Float((float) (this.gameObject.transform.position.x),
+					(float) (this.gameObject.transform.position.y),
+					(float) this.width, (float) this.height));
+			g2D.setStroke(Const.LINE);
+		}
 	}
 	
 	@Override
@@ -135,8 +133,8 @@ public class BoxBounds extends Bounds {
 	@Override
 	public boolean raycast(Vector2D pos) {
 		return pos.x > this.gameObject.transform.position.x &&
-				pos.x < this.gameObject.transform.position.x + this.width &&
+				pos.x < (this.gameObject.transform.position.x + this.width) &&
 				pos.y > this.gameObject.transform.position.y &&
-				pos.y < this.gameObject.transform.position.y + this.height;
+				pos.y < (this.gameObject.transform.position.y + this.height);
 	}
 }
